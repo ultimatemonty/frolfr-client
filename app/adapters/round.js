@@ -1,7 +1,5 @@
 import ApplicationAdapter from './application';
 
-var RoundAdapter = ApplicationAdapter.extend({
+export default ApplicationAdapter.extend({
   coalesceFindRequests: false
 });
-
-export default RoundAdapter;

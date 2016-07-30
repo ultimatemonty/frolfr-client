@@ -1,21 +1,24 @@
-import DS from 'ember-data';
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
+import { belongsTo, hasMany } from 'ember-data/relationships';
+import Ember from 'ember';
 
-var Round = DS.Model.extend({
-  courseName: DS.attr('string'),
-  createdAt: DS.attr('date'),
-  scorecards: DS.hasMany('scorecard', {async: true}),
-  course: DS.belongsTo('course', {async: true}),
-  holeCount: DS.attr('string'),
-  publicRecap: DS.attr('boolean'),
+const { computed } = Ember;
 
-  isStarted: function() {
+export default Model.extend({
+  courseName: attr('string'),
+  createdAt: attr('date'),
+  scorecards: hasMany('scorecard'),
+  course: belongsTo('course'),
+  holeCount: attr('string'),
+  publicRecap: attr('boolean'),
+
+  // only used for creating new rounds
+  players: hasMany('friend'),
+
+  isStarted: computed('scorecar@each.isStarted', function() {
     return this.get('scorecards').any(function (scorecard) {
       return scorecard.get('isStarted');
     });
-  }.property('scorecards.@each.isStarted'),
-
-  // only used for creating new rounds
-  players: DS.hasMany('friend', {async: true}),
+  })
 });
-
-export default Round;

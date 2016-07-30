@@ -1,25 +1,27 @@
-import DS from 'ember-data';
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
+import Ember from 'ember';
 
-var CourseStatLog = DS.Model.extend({
-  totalScorecardsPlayed: DS.attr('number'),
-  completedScorecardsPlayed: DS.attr('number'),
-  averageStrokes: DS.attr('number'),
-  bestStrokes: DS.attr('number'),
-  averageScore: DS.attr('number'),
-  bestScore: DS.attr('number'),
-  totalBogeys: DS.attr('number'),
-  totalPars: DS.attr('number'),
-  totalBirdies: DS.attr('number'),
-  totalEagles: DS.attr('number'),
-  totalDoublesOrWorse: DS.attr('number'),
+const { computed } = Ember;
 
-  displayAverageStrokes: function() {
+export default Model.extend({
+  totalScorecardsPlayed: attr('number'),
+  completedScorecardsPlayed: attr('number'),
+  averageStrokes: attr('number'),
+  bestStrokes: attr('number'),
+  averageScore: attr('number'),
+  bestScore: attr('number'),
+  totalBogeys: attr('number'),
+  totalPars: attr('number'),
+  totalBirdies: attr('number'),
+  totalEagles: attr('number'),
+  totalDoublesOrWorse: attr('number'),
+
+  displayAverageStrokes: computed('averageStrokes', function() {
     return Number(this.get('averageStrokes')).toFixed(3);
-  }.property('averageStrokes'),
+  }),
 
-  displayAverageScore: function() {
+  displayAverageScore: computed('averageScore', function() {
     return Number(this.get('averageScore')).toFixed(3);
-  }.property('averageScore'),
+  }),
 });
-
-export default CourseStatLog;

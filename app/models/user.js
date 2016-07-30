@@ -1,27 +1,29 @@
-import Ember from "ember";
-import DS from 'ember-data';
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
+import { hasMany } from 'ember-data/relationships';
+import Ember from 'ember';
 
-var User = DS.Model.extend({
-    firstName: DS.attr('string'),
-    middleName: DS.attr('string'),
-    lastName: DS.attr('string'),
-    email: DS.attr('string'),
-    password: DS.attr('string'),
-    passwordConfirmation: DS.attr('string'),
-    avatarUrl: DS.attr('string'),
-    scorecards: DS.hasMany('scorecard', { async: true }),
+const { computed, isPresent } = Ember;
 
-    fullName: function() {
-      return this.get('firstName') + " " + this.get('lastName');
-    }.property("firstName", "lastName"),
+export default Model.extend({
+    firstName: attr('string'),
+    middleName: attr('string'),
+    lastName: attr('string'),
+    email: attr('string'),
+    password: attr('string'),
+    passwordConfirmation: attr('string'),
+    avatarUrl: attr('string'),
+    scorecards: hasMany('scorecard'),
 
-    hasAvatar: function() {
-      return Ember.isPresent(this.get('avatarUrl'));
-    }.property('avatarUrl'),
+    fullName: computed('firstName', 'lastName', function() {
+      return this.get('firstName') + ' ' + this.get('lastName');
+    }),
 
-    hasValidPassword: function() {
+    hasAvatar: computed('avatarUrl', function() {
+      return isPresent(this.get('avatarUrl'));
+    }),
+
+    hasValidPassword: computed('password', 'passwordConfirmation', function() {
       return this.get('password') === this.get('passwordConfirmation');
-    }.property('password', 'passwordConfirmation')
+    })
 });
-
-export default User;

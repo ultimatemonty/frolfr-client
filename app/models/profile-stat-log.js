@@ -1,26 +1,28 @@
-import DS from 'ember-data';
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
+import Ember from 'ember';
 
-var ProfileStatLog = DS.Model.extend({
-  coursesPlayed: DS.attr('number'),
-  scorecardsStarted: DS.attr('number'),
-  completedScorecards: DS.attr('number'),
-  statesPlayed: DS.attr('number'),
-  topPlayedCourseName: DS.attr('string'),
-  topPlayedCourseScorecardsStarted: DS.attr('number'),
-  topFriendName: DS.attr('string'),
-  topFriendRoundsCount: DS.attr('number'),
+const { computed } = Ember;
 
-  hasNeverPlayed: function() {
+export default Model.extend({
+  coursesPlayed: attr('number'),
+  scorecardsStarted: attr('number'),
+  completedScorecards: attr('number'),
+  statesPlayed: attr('number'),
+  topPlayedCourseName: attr('string'),
+  topPlayedCourseScorecardsStarted: attr('number'),
+  topFriendName: attr('string'),
+  topFriendRoundsCount: attr('number'),
+
+  hasNeverPlayed: computed('scorecardsStarted', function() {
     return this.get('scorecardsStarted') === 0;
-  }.property('scorecardsStarted'),
+  }),
 
-  displayTopPlayedCourse: function() {
+  displayTopPlayedCourse: computed('topPlayedCourseName', 'topPlayedCourseScorecardsStarted', function() {
     return this.get('topPlayedCourseName') + ' (' + this.get('topPlayedCourseScorecardsStarted') + ' rounds)';
-  }.property('topPlayedCourseName', 'topPlayedCourseScorecardsStarted'),
+  }),
 
-  displayTopFriend: function() {
+  displayTopFriend: computed('topFriendName', 'topFriendRoundsCount', function() {
     return this.get('topFriendName') + ' (' + this.get('topFriendRoundsCount') + ' rounds)';
-  }.property('topFriendName', 'topFriendRoundsCount')
+  })
 });
-
-export default ProfileStatLog;

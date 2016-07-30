@@ -1,19 +1,21 @@
-import DS from 'ember-data';
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
+import Ember from 'ember';
 
-var UserStatLog = DS.Model.extend({
-  firstName: DS.attr('string'),
-  totalScorecardsPlayed: DS.attr('number'),
-  completedScorecardsPlayed: DS.attr('number'),
-  coursesPlayed: DS.attr('number'),
-  totalRoundsWithUser: DS.attr('number'),
-  totalRoundsWon: DS.attr('number'),
-  totalRoundsLost: DS.attr('number'),
-  totalRoundsTied: DS.attr('number'),
-  totalIncompleteRounds: DS.attr('number'),
+const { computed } = Ember;
 
-  hasNeverPlayed: function() {
+export default Model.extend({
+  firstName: attr('string'),
+  totalScorecardsPlayed: attr('number'),
+  completedScorecardsPlayed: attr('number'),
+  coursesPlayed: attr('number'),
+  totalRoundsWithUser: attr('number'),
+  totalRoundsWon: attr('number'),
+  totalRoundsLost: attr('number'),
+  totalRoundsTied: attr('number'),
+  totalIncompleteRounds: attr('number'),
+
+  hasNeverPlayed: computed('totalScorecardsPlayed', function() {
     return this.get('totalScorecardsPlayed') === 0;
-  }.property('totalScorecardsPlayed')
+  })
 });
-
-export default UserStatLog;

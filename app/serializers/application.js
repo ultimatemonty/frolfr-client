@@ -1,5 +1,4 @@
-import DS from 'ember-data';
+import { ActiveModelSerializer } from 'active-model-adapter';
+import EmbeddedRecordsMixin from 'ember-data/serializers/embedded-records-mixin';
 
-var ApplicationSerializer = DS.ActiveModelSerializer.extend(DS.EmbeddedRecordsMixin, {});
-
-export default ApplicationSerializer;
+export default ActiveModelSerializer.extend(EmbeddedRecordsMixin, {});

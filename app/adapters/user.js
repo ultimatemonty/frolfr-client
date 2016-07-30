@@ -1,7 +1,5 @@
 import ApplicationAdapter from './application';
 
-var UserAdapter = ApplicationAdapter.extend({
+export default ApplicationAdapter.extend({
   coalesceFindRequests: false
 });
-
-export default UserAdapter;

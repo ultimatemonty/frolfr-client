@@ -1,12 +1,16 @@
-import DS from 'ember-data';
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
+import Ember from 'ember';
 
-var LeaderboardScorecard = DS.Model.extend({
-  createdAt: DS.attr('date'),
-  userFullName: DS.attr('string'),
-  totalStrokes: DS.attr('number'),
-  totalScore: DS.attr('number'),
+const { computed } = Ember;
 
-  formattedTotalScore: function() {
+export default Model.extend({
+  createdAt: attr('date'),
+  userFullName: attr('string'),
+  totalStrokes: attr('number'),
+  totalScore: attr('number'),
+
+  formattedTotalScore: computed('totalScore', function() {
     var shooting = this.get('totalScore');
 
     if (shooting > 0) {
@@ -16,7 +20,5 @@ var LeaderboardScorecard = DS.Model.extend({
     }
 
     return shooting;
-  }.property('totalScore')
+  })
 });
-
-export default LeaderboardScorecard;

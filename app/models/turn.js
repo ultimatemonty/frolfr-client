@@ -1,13 +1,17 @@
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
+import { belongsTo } from 'ember-data/relationships';
 import Ember from "ember";
-import DS from 'ember-data';
 
-var Turn = DS.Model.extend({
-  strokes: DS.attr('number'),
-  par: DS.attr('number'),
-  holeNumber: DS.attr('string'),
-  scorecard: DS.belongsTo('scorecard', { async: true }),
+const { computed, isPresent } = Ember;
 
-  parStatus: function () {
+export default Model.extend({
+  strokes: attr('number'),
+  par: attr('number'),
+  holeNumber: attr('string'),
+  scorecard: belongsTo('scorecard'),
+
+  parStatus: computed('shooting', 'isPlayed', function () {
     var shooting = this.get('shooting');
 
     if (0 < shooting - 1) {
@@ -21,23 +25,21 @@ var Turn = DS.Model.extend({
     } else {
       return 'multipleBelowPar';
     }
-  }.property('shooting', 'isPlayed'),
+  }),
 
-  shooting: function () {
+  shooting: computed('strokes', 'par', function () {
     return this.get('strokes') - this.get('par');
-  }.property('strokes', 'par'),
+  }),
 
-  isPlayed: function() {
-    return Ember.isPresent(this.get('strokes'));
-  }.property('strokes'),
+  isPlayed: computed('strokes', function() {
+    return isPresent(this.get('strokes'));
+  }),
 
-  displayStrokes: function() {
+  displayStrokes: computed('isPlayed', 'strokes', function() {
     if (this.get('isPlayed')) {
       return this.get('strokes');
      } else {
       return '-';
     }
-  }.property('isPlayed', 'strokes')
+  })
 });
-
-export default Turn;

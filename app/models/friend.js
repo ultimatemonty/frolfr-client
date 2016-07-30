@@ -1,5 +1,3 @@
 import User from './user';
 
-var Friend = User.extend();
-
-export default Friend;
+export default User.extend();

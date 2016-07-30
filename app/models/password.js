@@ -1,10 +1,9 @@
-import DS from 'ember-data';
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
 
-var Password = DS.Model.extend({
-  password: DS.attr('string'),
-  passwordConfirmation: DS.attr('string'),
-  passwordResetToken: DS.attr('string'),
-  email: DS.attr('string')
+export default Model.extend({
+  password: attr('string'),
+  passwordConfirmation: attr('string'),
+  passwordResetToken: attr('string'),
+  email: attr('string')
 });
-
-export default Password;

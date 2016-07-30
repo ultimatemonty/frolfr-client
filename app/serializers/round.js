@@ -1,7 +1,5 @@
 import ApplicationSerializer from './application';
 
-var RoundSerializer = ApplicationSerializer.extend({
+export default ApplicationSerializer.extend({
   attrs: { players: { embedded: 'always' } }
 });
-
-export default RoundSerializer;

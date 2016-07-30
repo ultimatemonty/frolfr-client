@@ -1,5 +1,3 @@
 import Course from './course';
 
-var NearestCourse = Course.extend();
-
-export default NearestCourse;
+export default Course.extend();

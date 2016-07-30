@@ -1,24 +1,28 @@
-import DS from 'ember-data';
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
+import { belongsTo } from 'ember-data/relationships';
 import Ember from 'ember';
 
-var CourseScorecard = DS.Model.extend({
-  createdAt: DS.attr('date'),
-  totalStrokes: DS.attr('number'),
-  totalScore: DS.attr('number'),
-  isCompleted: DS.attr('boolean'),
-  rating: DS.attr('number'),
-  round: DS.belongsTo('round', { async: true }),
-  roundId: DS.attr('number'),
+const { computed, isPresent } = Ember;
 
-  displayRating: function() {
-    if (Ember.isPresent(this.get('rating'))) {
+export default Model.extend({
+  createdAt: attr('date'),
+  totalStrokes: attr('number'),
+  totalScore: attr('number'),
+  isCompleted: attr('boolean'),
+  rating: attr('number'),
+  round: belongsTo('round'),
+  roundId: attr('number'),
+
+  displayRating: computed('rating', function() {
+    if (isPresent(this.get('rating'))) {
       return this.get('rating');
     } else {
       return "N/A";
     }
-  }.property('rating'),
+  }),
 
-  formattedTotalScore: function() {
+  formattedTotalScore: computed('totalScore', 'isCompleted', function() {
     var shooting = this.get('totalScore'),
         isCompleted = this.get('isCompleted');
 
@@ -33,7 +37,5 @@ var CourseScorecard = DS.Model.extend({
     }
 
     return shooting;
-  }.property('totalScore', 'isCompleted')
+  })
 });
-
-export default CourseScorecard;

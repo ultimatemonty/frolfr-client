@@ -1,7 +1,5 @@
-import DS from 'ember-data';
+import LSAdapter from 'ember-localstorage-adapter/adapters/ls-adapter';
 
-var ApiKeyAdapter = DS.LSAdapter.extend({
+export default LSAdapter.extend({
   namespace: 'frolfr'
 });
-
-export default ApiKeyAdapter;

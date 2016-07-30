@@ -1,15 +1,18 @@
-import DS from 'ember-data';
+import Model from 'ember-data/model';
+import attr from 'ember-data/attr';
+import { belongsTo } from 'ember-data/relationships';
 import Ember from 'ember';
 
-var Review = DS.Model.extend({
-  rating: DS.attr('number'),
-  canUpdate: DS.attr('boolean'),
-  post: DS.attr('string'),
-  course: DS.belongsTo('course', { async: true }),
-  user: DS.belongsTo('user', { async: true }),
-  createdAt: DS.attr('date'),
+const { computed } = Ember;
+const { alias } = computed;
 
-  userFullName: Ember.computed.alias('user.fullName')
+export default Model.extend({
+  rating: attr('number'),
+  canUpdate: attr('boolean'),
+  post: attr('string'),
+  course: belongsTo('course'),
+  user: belongsTo('user'),
+  createdAt: attr('date'),
+
+  userFullName: alias('user.fullName')
 });
-
-export default Review;
