@@ -1,10 +1,12 @@
 import Ember from 'ember';
 import config from 'frolfr-client/config/environment';
 
-var SessionsController = Ember.Controller.extend({
+const { Controller, observer } = Ember;
+
+export default Controller.extend({
   needs: ['currentUser'],
 
-  init: function() {
+  init() {
     this._super();
     if (Ember.$.cookie('token') && Ember.$.cookie('email')) {
       this.setupAuthHeader(Ember.$.cookie('token'), Ember.$.cookie('email'));
@@ -16,7 +18,7 @@ var SessionsController = Ember.Controller.extend({
   token: Ember.$.cookie('token'),
   email: Ember.$.cookie('email'),
 
-  reset: function() {
+  reset() {
     this.setProperties({
       email: null,
       password: null,
@@ -29,7 +31,7 @@ var SessionsController = Ember.Controller.extend({
     });
   },
 
-  tokenChanged: function() {
+  tokenChanged: observer('token', function() {
     if (Ember.isEmpty(this.get('token'))) {
       Ember.$.removeCookie('token');
       Ember.$.removeCookie('email');
@@ -39,10 +41,10 @@ var SessionsController = Ember.Controller.extend({
       Ember.$.cookie('email', this.get('email'), { expires: twentyYears });
     }
 
-  }.observes('token'),
+  }),
 
   actions: {
-    login: function() {
+    login() {
       var _this = this;
 
       var attemptedTransition = this.get('attemptedTransition');
@@ -83,7 +85,7 @@ var SessionsController = Ember.Controller.extend({
         }
       });
     },
-    loginWithCredentials: function(email, password) {
+    loginWithCredentials(email, password) {
       this.set('email', email);
       this.set('password', password);
       this.send('login');
@@ -91,7 +93,7 @@ var SessionsController = Ember.Controller.extend({
   },
 
   // private
-  setupAuthHeader: function(token, email) {
+  setupAuthHeader(token, email) {
     Ember.$.ajaxSetup({
       headers: {
         'Authorization': 'Token token="' + token + '",email="' + email + '"'
@@ -99,12 +101,10 @@ var SessionsController = Ember.Controller.extend({
     });
   },
 
-  setupCurrentUser: function() {
+  setupCurrentUser() {
     var _this = this;
     this.store.find('user', 'current').then(function(user) {
       _this.get('controllers.currentUser').set('model', user);
     });
   }
 });
-
-export default SessionsController;

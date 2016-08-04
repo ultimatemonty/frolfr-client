@@ -1,18 +1,17 @@
 import Ember from 'ember';
 import pagedArray from 'ember-cli-pagination/computed/paged-array';
+const { computed, Controller } = Ember;
 
-var FriendsController = Ember.ArrayController.extend({
-  pagedContent: pagedArray("content", {infinite: true}),
+export default Controller.extend({
+  pagedContent: pagedArray('model', {infinite: true}),
 
-  hasNextPage: function() {
-    return this.get('content.totalPages') > this.get('content.page');
-  }.property('content.page', 'content.totalPages'),
+  hasNextPage: computed('content.page', 'content.totalPages', function() {
+    return this.get('model.totalPages') > this.get('model.page');
+  }),
 
   actions: {
-    loadNext: function() {
+    loadNext() {
       this.get('pagedContent').loadNextPage();
     }
   }
 });
-
-export default FriendsController;

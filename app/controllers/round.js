@@ -1,21 +1,21 @@
 import Ember from 'ember';
 
-var RoundController = Ember.ObjectController.extend({
-  publicRoundUrl: function () {
+const { computed, Controller } = Ember;
+
+export default Controller.extend({
+  publicRoundUrl: computed('model.id', function () {
     return 'http://frolfr.com/public/rounds/' + this.get('model.id');
-  }.property(),
+  }),
 
   actions: {
-    makePrivate: function() {
+    makePrivate() {
       this.get('model').set('publicRecap', false);
       this.get('model').save();
     },
 
-    publish: function() {
+    publish() {
       this.get('model').set('publicRecap', true);
       this.get('model').save();
     }
   }
 });
-
-export default RoundController;

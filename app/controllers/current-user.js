@@ -1,9 +1,9 @@
 import Ember from 'ember';
 
-var CurrentUserController = Ember.ObjectController.extend({
-  isAuthenticated: function() {
-    return this.get('model.isLoaded');
-  }.property('model.isLoaded')
-});
+const { computed, Controller } = Ember;
 
-export default CurrentUserController;
+export default Controller.extend({
+  isAuthenticated: computed('model.isLoaded', function() {
+    return this.get('model.isLoaded');
+  })
+});

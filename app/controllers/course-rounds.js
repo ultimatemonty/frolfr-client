@@ -1,47 +1,49 @@
 import Ember from 'ember';
 
-var CourseRoundsController = Ember.ArrayController.extend({
+const { computed, Controller } = Ember;
+
+export default Controller.extend({
   // Pagination
   page: 1,
   perPage: 10,
 
-  hasRatings: function() {
+  hasRatings() {
     return this.get('filteredContent').any(function(scorecard) {
       return Ember.isPresent(scorecard.get('rating'));
     });
   }.property('filteredContent.@each.rating'),
 
-  pagedContent: function() {
+  pagedContent() {
     var start = (this.get('page') - 1) * this.get('perPage');
     var end = this.get('page') * this.get('perPage');
 
     return this.get('filteredContent').slice(start, end);
   }.property('filteredContent.@each', 'page', 'perPage'),
 
-  isPaginated: function() {
+  isPaginated() {
     return this.get('filteredContent').length > this.get('perPage');
   }.property('filteredContent.length', 'perPage'),
 
-  isFirstPage: function() {
+  isFirstPage() {
     return this.get('page') === 1;
   }.property('page'),
 
-  totalPages: function() {
+  totalPages() {
     return Math.ceil(this.get('filteredContent').length / this.get('perPage'));
   }.property('page', 'perPage', 'filteredContent.length'),
 
-  isLastPage: function() {
+  isLastPage() {
     return this.get('page') === this.get('totalPages');
   }.property('page', 'totalPages'),
 
   // Filtering
   includeIncompleteScorecards: false,
 
-  resetPageCount: function() {
+  resetPageCount() {
     this.set('page', 1);
   }.observes('includeIncompleteScorecards'),
 
-  filteredContent: function() {
+  filteredContent() {
     if (this.get('includeIncompleteScorecards')) {
       return this.get('arrangedContent');
     } else {
@@ -49,13 +51,13 @@ var CourseRoundsController = Ember.ArrayController.extend({
     }
   }.property('arrangedContent.@each', 'includeIncompleteScorecards', 'completedScorecards.@each'),
 
-  completedScorecards: function() {
+  completedScorecards() {
     return this.get('arrangedContent').filter(function(scorecard) {
       return scorecard.get('isCompleted');
     });
   }.property('arrangedContent.@each.isCompleted'),
 
-  allScorecardsCompleted: function() {
+  allScorecardsCompleted() {
     return this.get('arrangedContent').every(function(scorecard) {
       return scorecard.get('isCompleted');
     });
@@ -65,23 +67,23 @@ var CourseRoundsController = Ember.ArrayController.extend({
   sortProperties: ['createdAt'],
   sortAscending: false,
 
-  currentSortProperty: function() {
+  currentSortProperty: computed('sortProperties', function() {
     return this.get('sortProperties').get('0');
-  }.property('sortProperties'),
+  }),
 
-  sortCreatedAt: function() {
+  sortCreatedAt: computed('currentSortProperty', 'sortDirection', function() {
     return this.isSortedBy('createdAt');
-  }.property('currentSortProperty', 'sortDirection'),
+  }),
 
-  sortTotalStrokes: function() {
+  sortTotalStrokes: computed('currentSortProperty', 'sortDirection', function() {
     return this.isSortedBy('totalStrokes');
-  }.property('currentSortProperty', 'sortDirection'),
+  }),
 
-  sortTotalScore: function() {
+  sortTotalScore: computed('currentSortProperty', 'sortDirection', function() {
     return this.isSortedBy('totalScore');
-  }.property('currentSortProperty', 'sortDirection'),
+  }),
 
-  isSortedBy: function(property) {
+  isSortedBy(property) {
     if (this.get('currentSortProperty') === property) {
       return this.get('sortDirection');
     } else {
@@ -89,16 +91,16 @@ var CourseRoundsController = Ember.ArrayController.extend({
     }
   },
 
-  sortDirection: function() {
+  sortDirection: computed('sortAscending', function() {
     if (this.get('sortAscending')) {
       return 'fa fa-arrow-up';
     } else {
       return 'fa fa-arrow-down';
     }
-  }.property('sortAscending'),
+  }),
 
   actions: {
-    sortBy: function(property) {
+    sortBy(property) {
       var isAscending = !this.get('sortAscending');
 
       this.set('sortProperties', [property]);
@@ -106,15 +108,15 @@ var CourseRoundsController = Ember.ArrayController.extend({
       this.set('page', 1);
     },
 
-    nextPage: function() {
+    nextPage() {
       this.incrementProperty('page');
     },
 
-    previousPage: function() {
+    previousPage() {
       this.decrementProperty('page');
     },
 
-    deleteRound: function(round) {
+    deleteRound(round) {
       if (window.confirm('Are you sure you want to delete this round?')) {
         round.then(function(round) {
           round.get('scorecards').map(function(scorecard) {
@@ -126,5 +128,3 @@ var CourseRoundsController = Ember.ArrayController.extend({
     }
   }
 });
-
-export default CourseRoundsController;

@@ -1,8 +1,9 @@
 import Ember from 'ember';
 
-var WelcomeController = Ember.Controller.extend({
-  needs: ['currentUser'],
-  currentUser: Ember.computed.alias('controllers.currentUser')
-});
+const { computed, Controller } = Ember;
+const { alias } = computed;
 
-export default WelcomeController;
+export default Controller.extend({
+  needs: ['currentUser'],
+  currentUser: alias('controllers.currentUser')
+});

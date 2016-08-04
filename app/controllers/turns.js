@@ -1,23 +1,18 @@
 import Ember from 'ember';
 
-var TurnsController = Ember.ArrayController.extend({
-  holeNumber: Ember.computed.alias('model.firstObject.holeNumber'),
+const { computed, Controller } = Ember;
+const { alias, equal } = computed;
 
-  holePar: Ember.computed.alias('model.firstObject.par'),
+export default Controller.extend({
+  holeNumber: alias('model.firstObject.holeNumber'),
+  holePar: alias('model.firstObject.par'),
+  isFirstHole: equal('holeNumber', '1'),
+  isLastHole: equal('holeNumber', 'holeCount'),
+  isPar3: equal('holePar', 3),
+  isPar4: equal('holePar', 4),
+  isPar5: equal('holePar', 5),
 
-  isFirstHole: function() {
-    return this.get('holeNumber') === "1";
-  }.property('holeNumber'),
-
-  isLastHole: function() {
-    return this.get('holeNumber') === this.get('holeCount');
-  }.property('holeNumber', 'finalHoleNumber'),
-
-  isPar3: function() { return this.get('holePar') === 3; }.property('holePar'),
-  isPar4: function() { return this.get('holePar') === 4; }.property('holePar'),
-  isPar5: function() { return this.get('holePar') === 5; }.property('holePar'),
-
-  finishRound: function() {
+  finishRound() {
     var roundId = this.get('roundId');
 
     this.controllerFor('application').set('currentRound', null);
@@ -26,7 +21,7 @@ var TurnsController = Ember.ArrayController.extend({
   },
 
   actions: {
-    previousHole: function() {
+    previousHole() {
       var holeNumber = parseInt(this.get('holeNumber')) - 1,
           roundId = this.get('roundId');
 
@@ -37,7 +32,7 @@ var TurnsController = Ember.ArrayController.extend({
       this.transitionToRoute('turns', roundId, holeNumber);
     },
 
-    nextHole: function() {
+    nextHole() {
       var holeNumber = parseInt(this.get('holeNumber')) + 1,
           roundId = this.get('roundId'),
           _this = this;
@@ -53,14 +48,14 @@ var TurnsController = Ember.ArrayController.extend({
       }
     },
 
-    addOne: function(turn) {
+    addOne(turn) {
       var strokes = parseInt(turn.get('strokes') || 0),
           maximumTurnStrokes = 8;
 
       turn.set('strokes', Math.min(maximumTurnStrokes, strokes + 1));
     },
 
-    subtractOne: function(turn) {
+    subtractOne(turn) {
       var strokes = parseInt(turn.get('strokes') || 0),
           minimumTurnStrokes = 1,
           newStrokes = strokes - 1;
@@ -72,7 +67,7 @@ var TurnsController = Ember.ArrayController.extend({
       }
     },
 
-    changePar: function(par) {
+    changePar(par) {
       var changedPar = parseInt(par);
 
       this.get('model').forEach(function(turn) {
@@ -81,7 +76,7 @@ var TurnsController = Ember.ArrayController.extend({
     },
 
     // Private
-    saveAll: function() {
+    saveAll() {
       this.get('model').forEach(function(turn) {
         if (turn.get('isDirty')) {
           turn.save();
@@ -90,5 +85,3 @@ var TurnsController = Ember.ArrayController.extend({
     }
   }
 });
-
-export default TurnsController;

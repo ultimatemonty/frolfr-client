@@ -1,35 +1,32 @@
 import Ember from 'ember';
 
-var FriendableUsersController = Ember.ArrayController.extend({
+const { computed, Controller, isEmpty } = Ember;
+
+export default Controller.extend({
   selection: null,
   query: null,
 
-  noUserSelected: function() {
-    return Ember.isEmpty(this.get('selection'));
-  }.property('selection'),
+  noUserSelected: computed('selection', function() {
+    return isEmpty(this.get('selection'));
+  }),
 
   actions: {
-    addFriend: function() {
-      var _this = this;
-
+    addFriend() {
       var newFriend = this.store.createRecord('friend',
         this.get("selection").toJSON({includeId: true})
       );
 
-      newFriend.save().then(function() {
+      newFriend.save().then(() => {
         // This user is now our friend, so remove them from the list of friendable users
-        var selectedUser = _this.store.find('friendableUser', _this.get('selection.id'));
-        selectedUser.then(function(selectedUser) {
+        var selectedUser = this.store.find('friendableUser', this.get('selection.id'));
+        selectedUser.then((selectedUser) => {
           selectedUser.deleteRecord();
         });
 
         // Clear out the form
-        _this.set('selection', null);
-        _this.set('query', null);
+        this.set('selection', null);
+        this.set('query', null);
       });
-
     }
   }
 });
-
-export default FriendableUsersController;
