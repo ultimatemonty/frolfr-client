@@ -6,24 +6,24 @@ import Ember from 'ember';
 const { computed, isPresent } = Ember;
 
 export default Model.extend({
-    city: attr('string'),
-    state: attr('string'),
-    country: attr('string'),
-    name: attr('string'),
-    status: attr('string'),
-    location: attr('string'),
-    lastPlayedAt: attr('date'),
-    scorecards: hasMany('scorecard'),
-    holes: hasMany('hole'),
-    holeCount: attr('number'),
-    reviews: hasMany('review'),
-    photos: hasMany('photo'),
+  city: attr('string'),
+  state: attr('string'),
+  country: attr('string'),
+  name: attr('string'),
+  status: attr('string'),
+  location: attr('string'),
+  lastPlayedAt: attr('date'),
+  holeCount: attr('number'),
+  scorecards: hasMany('scorecard'),
+  holes: hasMany('hole'),
+  reviews: hasMany('review'), 
+  photos: hasMany('photo'),
 
-    isApproved: computed('status', function() {
-        return this.get('status') === 'approved';
-    }),
+  isApproved: computed('status', function() {
+    return this.get('status') === 'approved';
+  }),
 
-    hasPhoto: computed('photos', function() {
-        return isPresent(this.get('photos'));
-    })
+  hasPhoto: computed('photos', function() {
+    return isPresent(this.get('photos'));
+  })
 });
